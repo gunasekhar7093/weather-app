@@ -40,6 +40,20 @@ function setText(id, text) {
   document.getElementById(id).textContent = text;
 }
 
+// Set the whole page's color atmosphere from the searched location's temperature.
+function applyTemperatureTheme(temperatureCelsius) {
+  let theme = "mild";
+  if (temperatureCelsius < 0) theme = "freezing";
+  else if (temperatureCelsius < 12) theme = "cold";
+  else if (temperatureCelsius < 22) theme = "mild";
+  else if (temperatureCelsius < 30) theme = "warm";
+  else if (temperatureCelsius < 38) theme = "hot";
+  else theme = "extreme";
+
+  document.body.dataset.temperature = theme;
+  document.body.style.setProperty("--searched-temperature", temperatureCelsius);
+}
+
 async function getWeather(cityOverride) {
   const city = (cityOverride ?? cityInput.value).trim();
   if (!city) {
@@ -86,6 +100,7 @@ async function getWeather(cityOverride) {
     emptyState.classList.add("hidden");
     setStatus(`Here’s the latest for ${data.name}.`);
     document.body.dataset.weather = condition.main.toLowerCase();
+    applyTemperatureTheme(Number(data.main.temp));
     cityInput.value = data.name;
   } catch (error) {
     setStatus(error.message || "Something went wrong. Check your connection and try again.", "error");
