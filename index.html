@@ -3,30 +3,107 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Weather App</title>
+  <meta name="theme-color" content="#f4f7fb">
+  <meta name="description" content="A clean, simple weather dashboard with current conditions, humidity and wind details.">
+  <title>Weather — A clearer forecast</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <main class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="Weather home">
+        <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 36 36"><path d="M24.9 21.5H11.7a6.2 6.2 0 1 1 1.5-12.2A9 9 0 0 1 30 13.8a4.1 4.1 0 0 1-5.1 7.7Z"/><path d="M9 26h14M13 30h10"/></svg></span>
+        <span>weather<span class="brand-dot">.</span></span>
+      </a>
+      <div class="topbar-note"><span class="live-dot"></span> YOUR DAILY WEATHER</div>
+    </header>
 
-  <div class="container">
-    <div id="box">
-      <h1>🌤 Weather Info</h1>
+    <section class="intro" aria-labelledby="page-title">
+      <p class="eyebrow">A LITTLE LOOK OUTSIDE</p>
+      <h1 id="page-title">Weather, <span>made simple.</span></h1>
+      <p class="intro-copy">Find out what it feels like out there.</p>
+    </section>
 
-    <div class="search-box">
-      <input type="text" id="cityInput" placeholder="Enter city name">
-      <button onclick="getWeather()">Get Weather</button>
-    </div>
+    <section class="search-panel" aria-label="Search for a city">
+      <span class="search-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4.3 4.3"/></svg></span>
+      <input id="cityInput" type="search" placeholder="Search a city — e.g. Hyderabad" aria-label="City name" autocomplete="address-level2" spellcheck="false">
+      <button id="searchButton" type="button"><span>Find weather</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+    </section>
+    <p id="statusMessage" class="status-message" role="status" aria-live="polite">Type a city name to get started.</p>
 
-    <div id="weatherResult" class="weather-card hidden">
-      <h2 id="cityName"></h2>
-      <p id="temperature"></p>
-      <p id="description"></p>
-      <p id="humidity"></p>
-      <p id="wind"></p>
-    </div>
-    </div>
-  </div>
+    <section id="weatherResult" class="weather-layout hidden" aria-live="polite" aria-label="Current weather">
+      <article class="current-card">
+        <div class="current-top">
+          <div>
+            <p class="card-kicker">CURRENT WEATHER</p>
+            <h2 id="cityName">Hyderabad</h2>
+            <p class="location-meta" id="localDate">Local conditions</p>
+          </div>
+          <span class="weather-symbol" id="weatherIcon" aria-hidden="true">☀️</span>
+        </div>
+        <div class="temperature-row">
+          <div class="temperature" id="temperature">--<span>°</span></div>
+          <div class="condition-block">
+            <p id="description">Waiting for weather</p>
+            <span id="feelsLike">Feels like --°</span>
+          </div>
+        </div>
+        <div class="current-footer">
+          <span><span class="mini-sun" aria-hidden="true">↗</span> Stay one step ahead of the day.</span>
+          <span class="updated-label" id="updatedLabel">LIVE CONDITIONS</span>
+        </div>
+      </article>
 
+      <div class="details-column">
+        <div class="section-heading">
+          <div><p class="card-kicker">AT A GLANCE</p><h3>Weather details</h3></div>
+          <span class="detail-count">01 / 03</span>
+        </div>
+        <div class="detail-grid">
+          <article class="detail-card">
+            <span class="detail-icon humidity-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3s-6.5 7.1-6.5 11.5a6.5 6.5 0 0 0 13 0C18.5 10.1 12 3 12 3Z"/><path d="M9 15a3 3 0 0 0 3 3"/></svg></span>
+            <p class="detail-label">Humidity</p><p id="humidity" class="detail-value">--<span>%</span></p>
+            <p class="detail-note">Moisture in the air</p>
+          </article>
+          <article class="detail-card">
+            <span class="detail-icon wind-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 8h12a3 3 0 1 0-3-3M2 12h17a2.5 2.5 0 1 1-2.5 2.5M4 16h7a2 2 0 1 1-2 2"/></svg></span>
+            <p class="detail-label">Wind speed</p><p id="wind" class="detail-value">--<span> m/s</span></p>
+            <p class="detail-note">Air movement nearby</p>
+          </article>
+          <article class="detail-card detail-card-wide">
+            <span class="detail-icon visibility-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M2 12s3.6-6 10-6 10 6 10 6-3.6 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="2.5"/></svg></span>
+            <div class="wide-detail-copy"><p class="detail-label">Visibility</p><p class="detail-note">How far you can see right now</p></div>
+            <p id="visibility" class="detail-value">--<span> km</span></p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="emptyState" class="empty-state" aria-label="Weather tips">
+      <div class="empty-illustration" aria-hidden="true">
+        <span class="illustration-sun"></span><span class="illustration-cloud cloud-one"></span><span class="illustration-cloud cloud-two"></span>
+      </div>
+      <div class="empty-copy">
+        <p class="card-kicker">YOUR NEXT CHECK-IN</p>
+        <h2>Where are we checking today?</h2>
+        <p>Search any city to see its current temperature, conditions, humidity and wind — all in one place.</p>
+      </div>
+      <div class="quick-searches">
+        <span>TRY A CITY</span>
+        <button type="button" data-city="Hyderabad">Hyderabad <span>↗</span></button>
+        <button type="button" data-city="London">London <span>↗</span></button>
+        <button type="button" data-city="Tokyo">Tokyo <span>↗</span></button>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <span>Made for the moments before you step outside.</span>
+      <span class="footer-right"><span class="live-dot"></span> CURRENT CONDITIONS</span>
+    </footer>
+  </main>
   <script src="script.js"></script>
 </body>
 </html>
